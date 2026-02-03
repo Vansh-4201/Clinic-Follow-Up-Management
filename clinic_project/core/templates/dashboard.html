@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Followups Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            color: #222;
+        }
+
+        .stats {
+            margin-bottom: 25px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .filter-form {
+            display: flex;
+            gap: 18px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .filter-form label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+        .filter-form select,
+        .filter-form input {
+            padding: 9px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            min-width: 150px;
+        }
+
+        .filter-form button {
+            padding: 10px 18px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .filter-form button:hover {
+            background: #0056b3;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .create-link {
+            text-decoration: none;
+            background: #28a745;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .create-link:hover {
+            background: #1e7e34;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table th,
+        table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        table th {
+            background: #f1f1f1;
+            color: #333;
+        }
+
+        table tr:hover {
+            background: #fafafa;
+        }
+
+        .status-done {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .mark-done-btn {
+            background: #ffc107;
+            border: none;
+            padding: 7px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .mark-done-btn:hover {
+            background: #e0a800;
+        }
+
+        .link-btn {
+            background: #e9ecef;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .link-btn:hover {
+            background: #dfe3e6;
+        }
+
+        .logout-form {
+            margin-top: 30px;
+            text-align: right;
+        }
+
+        .logout-form button {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .logout-form button:hover {
+            background: #b52a37;
+        }
+
+        .empty-row {
+            text-align: center;
+            padding: 25px;
+            color: #777;
+        }
+
+        .export-link {
+            display: block;
+            max-width: 1100px;
+            margin: 10px auto;
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Followups Dashboard</h1>
+
+    <div class="stats">
+        Total: {{ total_count }} |
+        Pending: {{ pending_count }} |
+        Done: {{ done_count }}
+    </div>
+
+    <form method="get" class="filter-form">
+        <div>
+            <label>Status</label>
+            <select name="status">
+                <option value="">All</option>
+                <option value="pending">Pending</option>
+                <option value="done">Done</option>
+            </select>
+        </div>
+
+        <div>
+            <label>From</label>
+            <input type="date" name="start_date">
+        </div>
+
+        <div>
+            <label>To</label>
+            <input type="date" name="end_date">
+        </div>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <div class="actions">
+        <a class="create-link" href="{% url 'create_followup' %}">
+            + Create Follow-up
+        </a>
+    </div>
+
+    <table>
+        <tr>
+            <th>Patient</th>
+            <th>Phone</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Language</th>
+            <th>Public Link</th>
+            <th>Views</th>
+            <th>Actions</th>
+        </tr>
+
+        {% for f in followups %}
+        <tr>
+            <td>{{ f.patient_name }}</td>
+            <td>{{ f.phone }}</td>
+            <td>{{ f.due_date }}</td>
+            <td>
+                {% if f.status == "done" %}
+                    <span class="status-done">Done</span>
+                {% else %}
+                    Pending
+                {% endif %}
+            </td>
+            <td>{{ f.language }}</td>
+            <td>
+                <a href="/p/{{ f.public_token }}/" target="_blank">Open</a>
+                |
+                <button
+                    type="button"
+                    class="link-btn"
+                    onclick="copyLink('{{ request.scheme }}://{{ request.get_host }}/p/{{ f.public_token }}/')">
+                    Copy
+                </button>
+            </td>
+            <td>{{ f.view_count }}</td>
+            <td>
+                <a href="{% url 'edit_followup' f.id %}">Edit</a>
+                |
+                <form method="post" action="{% url 'delete_followup' f.id %}"
+                      style="display:inline;"
+                      onsubmit="return confirm('Delete this follow-up?');">
+                    {% csrf_token %}
+                    <button type="submit" class="link-btn">Delete</button>
+                </form>
+
+                {% if f.status != "done" %}
+                <form method="post" action="{% url 'mark_followup_done' f.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="mark-done-btn">Mark Done</button>
+                </form>
+                {% else %}
+                    ✓
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="8" class="empty-row">
+                No followups found.
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post" action="{% url 'logout' %}" class="logout-form">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+
+</div>
+
+<a class="export-link" href="{% url 'export_followups_csv' %}">
+    Export Followups to CSV
+</a>
+
+</body>
+</html>

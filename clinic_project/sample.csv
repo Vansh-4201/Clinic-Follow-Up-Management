@@ -1,0 +1,15 @@
+patient_name,phone,due_date,language,notes
+Rahul Sharma,9876543210,2026-02-10,en,First visit
+Anita Verma,9123456780,2026-02-12,hi,Follow-up required
+Suresh Patel,9988776655,2026-02-14,en,Routine checkup
+Neha Singh,9012345678,2026-02-16,hi,Prescribed medication
+Amit Kumar,8899776655,2026-02-18,en,Lab tests pending
+Priya Mehta,7766554433,2026-02-20,en,Reviewed reports
+Rohan Das,9090909090,hi,Needs specialist referral
+Kavita Iyer,9345678901,2026-02-24,en,Post-surgery follow-up
+Mohit Agarwal,8456123789,2026-02-26,hi,Insurance details needed
+Sunita Rao,9988123456,2026-02-28,en,Stable condition
+Arjun Malhotra,8877665544,2026-03-02,en,First consultation
+Pooja Chawla,9321456780,2026-03-04,hi,Missed previous appointment
+Invalid Row,,2026-03-06,en,Missing phone
+Test Patient,12345,2026-03-08,hi,Invalid phone number

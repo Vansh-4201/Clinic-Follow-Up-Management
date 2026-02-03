@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Follow-up</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .card {
+            max-width: 700px;
+            margin: auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        p {
+            margin: 8px 0;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f1f1;
+            border-left: 5px solid #007bff;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+
+    <h2>Follow-up Information</h2>
+
+    <p><strong>Patient:</strong> {{ followup.patient_name }}</p>
+    <p><strong>Due Date:</strong> {{ followup.due_date }}</p>
+    <p><strong>Status:</strong> {{ followup.status }}</p>
+    <p><strong>Notes:</strong> {{ followup.notes }}</p>
+
+    <hr>
+
+    <div class="message">
+    {% if followup.language == "en" %}
+        Please follow the instructions carefully and complete the required steps before the due date.
+        <br><br>
+        Please contact this number for further details: <strong>+91 XXXXXXXXXX</strong>
+    {% elif followup.language == "hi" %}
+        कृपया निर्देशों को ध्यानपूर्वक पढ़ें और निर्धारित तिथि से पहले आवश्यक कार्य पूरा करें।
+        <br><br>
+        अधिक जानकारी के लिए इस नंबर पर संपर्क करें: <strong>+91 1111111111</strong>
+    {% else %}
+        Please contact the clinic for further instructions.
+        <br><br>
+        Contact number: <strong>+91 1111111111</strong>
+    {% endif %}
+</div>
+
+
+</div>
+
+</body>
+</html>
